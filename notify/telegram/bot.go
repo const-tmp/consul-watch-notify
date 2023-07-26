@@ -1,9 +1,11 @@
 package telegram
 
 import (
+	"errors"
 	"fmt"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/spf13/viper"
+	"log"
 )
 
 type Bot struct {
@@ -15,6 +17,10 @@ func (b Bot) sendMessage(message string) error {
 	msg := tgbotapi.NewMessage(b.chatID, message)
 	msg.ParseMode = "HTML"
 	_, err := b.bot.Send(msg)
+	var botErr tgbotapi.Error
+	if errors.As(err, &botErr) {
+		log.Printf("%+v", botErr)
+	}
 	return err
 }
 
